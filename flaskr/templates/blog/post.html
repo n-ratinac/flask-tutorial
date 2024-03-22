@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}{{post['title']}}{% endblock %}</h1>
+  {% block content %}
+  <p>
+    {{post['body']}}
+  </p>
+  <p>
+    Likes : {{likes}}
+  </p>
+  {% if g.user %}
+    <a href="{{url_for( 'like.like', id = post['id'] )}}">Like</a>
+  {% endif %}
+  {% endblock %}
+{% endblock %}

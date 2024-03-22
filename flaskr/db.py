@@ -1,5 +1,5 @@
 import sqlite3
-
+import shutil
 import click
 from flask import current_app, g
 
@@ -35,6 +35,16 @@ def init_db_command():
     init_db()
     click.echo('Initialized the database.')
 
+def backup_db(target="bkp.sqlite"):
+    shutil.copyfile(current_app.config['DATABASE'], target)
+
+@click.command('bkp-db')
+def backup_db_command():
+    click.echo("Backing up db...")
+    backup_db()
+    click.echo("Database backed up!")
+
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+    app.cli.add_command(backup_db_command)

@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
-
+from .like import get_likes_for_post
 bp = Blueprint('blog', __name__)
 
 def get_post(id, check_author=True):
@@ -34,6 +34,12 @@ def index():
         ' ORDER BY created DESC'
     ).fetchall()
     return render_template('blog/index.html', posts=posts)
+
+@bp.route("/post/<int:id>", methods=["GET"])
+def post(id):
+    post = get_post(id, False)
+    likes = get_likes_for_post(id)
+    return render_template("blog/post.html", post=post, likes=likes)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
